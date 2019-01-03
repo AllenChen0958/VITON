@@ -7,9 +7,9 @@
 *.o
 *.so
 *.pyc
-*.mat
-*.png
-*.jpg
+#*.mat
+#*.png
+#*.jpg
 
 # Packages #
 ############
