@@ -5,8 +5,8 @@
 
 addpath('shape_context')
 DATA_ROOT='data/women_top/';
-MASK_DIR='results/stage1/tps/00015000_';
-
+%MASK_DIR='results/stage1/tps/00015000_';
+MASK_DIR='data/segment/0';
 % Check if using MATLAB or Octave
 isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
 if(isOctave)
@@ -26,7 +26,8 @@ n_control = 10;
 for i = 1:1 %length(image1) % only run over 1 image (for now)
     image_name1 = image1{i};
     image_name2 = image2{i};
-    if exist([MASK_DIR, image_name1, '_', image_name2, '_tps.mat'])
+    %if exist([MASK_DIR, image_name1, '_', image_name2, '_tps.mat'])
+    if exist([MASK_DIR, image_name1, '_tps.mat'])
         continue
     end
     V1 = imread([DATA_ROOT, image_name2]);
@@ -38,8 +39,10 @@ for i = 1:1 %length(image1) % only run over 1 image (for now)
     V1 = imfill(V1);
     V1 = medfilt2(V1);
     % Load product mask of image.
-    V2 = load([MASK_DIR, image_name1, '_', image_name2, '_mask.mat']);
-    V2 = imresize(double(V2.mask), [h,w]);
+    %V2 = load([MASK_DIR, image_name1, '_', image_name2, '_mask.mat']);
+    V2 = load([MASK_DIR, image_name1, '.mat']);
+    %V2 = imresize(double(V2.mask), [h,w]);
+    V2 = imresize(double(V2.segment), [h,w]);
     % TPS transformation
     try
         tic;[keypoints1, keypoints2, warp_points0, warp_im] = tps_main(V1, V2, n_control, orig_im, 0);toc;

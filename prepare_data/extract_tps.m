@@ -25,13 +25,21 @@ for i = 1:length(all_images)/2
     V1 = medfilt2(V1);
     % Load product mask of image.
     orig_im2 = imread([DATA_ROOT, image_name]);
-    V2 = load([SEG_DIR, image_name(1:end-4)]);
+    k = image_name(1:end-6);
+    V2 = load([SEG_DIR, k,'_0.jpg.mat']);
+    %V2 = load([SEG_DIR, image_name(1:end-4)]);
     V2 = V2.segment';
     % preprocess segmentation map
+    [h1,w1,~] = size(V2)
     if h0 > w0
-      V2 = V2(:, 1: round(641 * w0 / h0));
+      round(641 * w0 / h0)
+      if (641 * w0 / h0) <  w1
+        V2 = V2(:, 1: round(641 * w0 / h0));
+      end
     else
-      V2 = V2(1:round(641 * h0 / w0), :);
+      if (641 * w0 / h0) <  h1  
+        V2 = V2(1:round(641 * h0 / w0), :);
+      end
     end
     V2 = imresize(V2, [h, w], 'nearest');
     V2 = double(V2 == 5);
